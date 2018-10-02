@@ -1,3 +1,4 @@
+// Copyright (c) 2018-2019, The ArQmA Project
 // Copyright (c) 2014-2018, The Monero Project
 //
 // All rights reserved.
@@ -35,7 +36,7 @@ Rectangle {
 
     height: {
         if(!customDecorations || isMobile){
-            return 0;
+            return 1;
         }
 
         if(small) return 38 * scaleRatio;
@@ -112,7 +113,7 @@ Rectangle {
         color:  "transparent"
         height: titleBar.height
         width: height
-        visible: isMobile
+        visible: !isMobile
         z: parent.z + 2
 
         Image {
@@ -130,7 +131,7 @@ Rectangle {
             onEntered: goToBasicVersionButton.color = "#262626";
             onExited: goToBasicVersionButton.color = "transparent";
             onClicked: {
-                releaseFocus()
+                //releaseFocus()
                 parent.checked = !parent.checked
                 titleBar.goToBasicVersion(leftPanel.visible)
             }

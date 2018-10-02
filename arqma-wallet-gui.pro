@@ -92,14 +92,6 @@ CONFIG(DISABLE_PASS_STRENGTH_METER) {
     SOURCES += src/daemon/DaemonManager.cpp
 }
 
-lupdate_only {
-SOURCES = *.qml \
-          components/*.qml \
-          pages/*.qml \
-          wizard/*.qml \
-          wizard/*js
-}
-
 
 ios:armv7 {
     message("target is armv7")
@@ -118,11 +110,17 @@ LIBS += -L$$WALLET_ROOT/lib \
         -lepee \
         -lunbound \
         -leasylogging \
-	-lsodium
+        -lsodium \
 }
 
 android {
+    QT += androidextras
+
     message("Host is Android")
+
+    DISTFILES += -L$$WALLET_ROOT/ \
+         AndroidManifest.xml
+
     LIBS += -L$$WALLET_ROOT/lib \
         -lwallet_merged \
         -llmdb \
@@ -163,7 +161,7 @@ ios {
         -lssl \
         -lcrypto \
         -ldl \
-	-lsodium
+        -lsodium
 }
 
 CONFIG(WITH_SCANNER) {
@@ -283,7 +281,7 @@ linux {
       # On some distro's we need to add dynload
       LIBS+= -ldl
     }
-	
+
     LIBS+= \
         -lboost_serialization \
         -lboost_thread \
@@ -296,7 +294,7 @@ linux {
         -lssl \
         -llmdb \
         -lcrypto \
-	-lsodium
+        -lsodium
 
     if(!android) {
         LIBS+= \
@@ -327,6 +325,7 @@ macx {
         -L/usr/local/opt/boost/lib \
         -lboost_serialization \
         -lboost_thread-mt \
+        -lboost_system-mt \
         -lboost_system \
         -lboost_date_time \
         -lboost_filesystem \
@@ -336,82 +335,10 @@ macx {
         -lssl \
         -lcrypto \
         -ldl \
-	-lsodium
+        -lsodium
     LIBS+= -framework PCSC
 
 }
-
-
-# translation stuff
-TRANSLATIONS = $$files($$PWD/translations/arqma-core_*.ts)
-
-CONFIG(release, debug|release) {
-    DESTDIR = release/bin
-    LANGUPD_OPTIONS = -locations relative -no-ui-lines
-    LANGREL_OPTIONS = -compress -nounfinished -removeidentical
-
-} else {
-    DESTDIR = debug/bin
-    LANGUPD_OPTIONS =
-#    LANGREL_OPTIONS = -markuntranslated "MISS_TR "
-}
-
-TRANSLATION_TARGET_DIR = $$OUT_PWD/translations
-
-!ios {
-    isEmpty(QMAKE_LUPDATE) {
-        win32:LANGUPD = $$[QT_INSTALL_BINS]\lupdate.exe
-        else:LANGUPD = $$[QT_INSTALL_BINS]/lupdate
-    }
-
-    isEmpty(QMAKE_LRELEASE) {
-        win32:LANGREL = $$[QT_INSTALL_BINS]\lrelease.exe
-        else:LANGREL = $$[QT_INSTALL_BINS]/lrelease
-    }
-
-    langupd.command = \
-        $$LANGUPD $$LANGUPD_OPTIONS $$shell_path($$_PRO_FILE) -ts $$_PRO_FILE_PWD/$$TRANSLATIONS
-
-
-
-    langrel.depends = langupd
-    langrel.input = TRANSLATIONS
-    langrel.output = $$TRANSLATION_TARGET_DIR/${QMAKE_FILE_BASE}.qm
-    langrel.commands = \
-        $$LANGREL $$LANGREL_OPTIONS ${QMAKE_FILE_IN} -qm $$TRANSLATION_TARGET_DIR/${QMAKE_FILE_BASE}.qm
-    langrel.CONFIG += no_link
-
-    QMAKE_EXTRA_TARGETS += langupd deploy deploy_win
-    QMAKE_EXTRA_COMPILERS += langrel
-
-    # Compile an initial version of translation files when running qmake
-    # the first time and generate the resource file for translations.
-    !exists($$TRANSLATION_TARGET_DIR) {
-        mkpath($$TRANSLATION_TARGET_DIR)
-    }
-    qrc_entry = "<RCC>"
-    qrc_entry += '  <qresource prefix="/">'
-    write_file($$TRANSLATION_TARGET_DIR/translations.qrc, qrc_entry)
-    for(tsfile, TRANSLATIONS) {
-        qmfile = $$TRANSLATION_TARGET_DIR/$$basename(tsfile)
-        qmfile ~= s/.ts$/.qm/
-        system($$LANGREL $$LANGREL_OPTIONS $$tsfile -qm $$qmfile)
-        qrc_entry = "    <file>$$basename(qmfile)</file>"
-        write_file($$TRANSLATION_TARGET_DIR/translations.qrc, qrc_entry, append)
-    }
-    qrc_entry = "  </qresource>"
-    qrc_entry += "</RCC>"
-    write_file($$TRANSLATION_TARGET_DIR/translations.qrc, qrc_entry, append)
-    RESOURCES += $$TRANSLATION_TARGET_DIR/translations.qrc
-}
-
-
-# Update: no issues with the "slow link process" anymore,
-# for development, just build debug version of libwallet_merged lib
-# by invoking 'get_libwallet_api.sh Debug'
-# so we update translations everytime even for debug build
-
-PRE_TARGETDEPS += langupd compiler_langrel_make_all
 
 RESOURCES += qml.qrc
 CONFIG += qtquickcompiler
@@ -419,28 +346,17 @@ CONFIG += qtquickcompiler
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
-# Default rules for deployment.
+CONFIG(release, debug|release) {
+    DESTDIR = release/bin
+} else {
+    DESTDIR = debug/bin
+}
+
+# Rules for building translations.
+include(translations.pri)
+
+# Rules for deploying the application.
 include(deployment.pri)
-macx {
-    deploy.commands += macdeployqt $$sprintf("%1/%2/%3.app", $$OUT_PWD, $$DESTDIR, $$TARGET) -qmldir=$$PWD
-}
-
-win32 {
-    deploy.commands += windeployqt $$sprintf("%1/%2/%3.exe", $$OUT_PWD, $$DESTDIR, $$TARGET) -release -qmldir=$$PWD
-    # Win64 msys2 deploy settings
-    contains(QMAKE_HOST.arch, x86_64) {
-        deploy.commands += $$escape_expand(\n\t) $$PWD/windeploy_helper.sh $$DESTDIR
-    }
-}
-
-linux:!android {
-    deploy.commands += $$escape_expand(\n\t) $$PWD/linuxdeploy_helper.sh $$DESTDIR $$TARGET
-}
-
-android{
-    deploy.commands += make install INSTALL_ROOT=$$DESTDIR && androiddeployqt --input android-libarqma-wallet-gui.so-deployment-settings.json --output $$DESTDIR --deployment bundled --android-platform android-21 --jdk /usr/lib/jvm/java-8-openjdk-amd64 -qmldir=$$PWD
-}
-
 
 OTHER_FILES += \
     .gitignore \

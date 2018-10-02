@@ -93,11 +93,11 @@ int main(int argc, char *argv[])
     if (isDesktop) putenv((char*)"QT_QPA_PLATFORM=xcb");
 #endif
 
-//    // Enable high DPI scaling on windows & linux
-//#if !defined(Q_OS_ANDROID) && QT_VERSION >= 0x050600
-//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-//    qDebug() << "High DPI auto scaling - enabled";
-//#endif
+    // Enable high DPI scaling on windows & linux
+#if !defined(Q_OS_ANDROID) && QT_VERSION >= 0x050600
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    qDebug() << "High DPI auto scaling - enabled";
+#endif
 
     MainApp app(argc, argv);
 
@@ -133,8 +133,8 @@ int main(int argc, char *argv[])
     qWarning().noquote() << "app startd" << "(log: " + logPath + ")";
 
     // screen settings
-    // Mobile is designed on 128dpi
-    qreal ref_dpi = 128;
+    // Mobile is designed on 300dpi
+    qreal ref_dpi = 300;
     QRect geo = QApplication::desktop()->availableGeometry();
     QRect rect = QGuiApplication::primaryScreen()->geometry();
     qreal dpi = QGuiApplication::primaryScreen()->logicalDotsPerInch();

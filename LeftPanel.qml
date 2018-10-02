@@ -1,3 +1,4 @@
+// Copyright (c) 2018-2019, The ArQmA Project
 // Copyright (c) 2014-2018, The Monero Project
 //
 // All rights reserved.
@@ -270,7 +271,7 @@ Rectangle {
 
             // ------------- Dashboard tab ---------------
 
-            /*
+
             MenuButton {
                 id: dashboardButton
                 anchors.left: parent.left
@@ -294,7 +295,7 @@ Rectangle {
                 color: dashboardButton.checked || transferButton.checked ? "#FFEF7E" : "#7E6E00"
                 height: 1
             }
-            */
+
 
             // top border
             Rectangle {

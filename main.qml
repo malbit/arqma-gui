@@ -71,7 +71,7 @@ ApplicationWindow {
     property int timeToUnlock: 0
     property bool qrScannerEnabled: (typeof builtWithScanner != "undefined") && builtWithScanner
     property int blocksToSync: 1
-    property var isMobile: (appWindow.width > 700 && !isAndroid) ? false : true
+    property var isMobile: (appWindow.width > 720 && !isAndroid) ? false : true
     property var cameraUi
     property bool remoteNodeConnected: false
     property bool androidCloseTapped: false;
@@ -1283,10 +1283,10 @@ ApplicationWindow {
                 PropertyChanges { target: mobileHeader; visible: false }
             }, State {
                 name: "normal"
-                PropertyChanges { target: leftPanel; visible: (isMobile)? false : true }
+                PropertyChanges { target: leftPanel; visible: (isMobile)? true : false }
                 PropertyChanges { target: rightPanel; visible: true }
                 PropertyChanges { target: middlePanel; visible: true }
-                PropertyChanges { target: titleBar; basicButtonVisible: true }
+                PropertyChanges { target: titleBar; basicButtonVisible: false }
                 PropertyChanges { target: wizard; visible: false }
                 PropertyChanges { target: appWindow; width: (screenWidth < 969 || isAndroid || isIOS)? screenWidth : 969 } //rightPanelExpanded ? 1269 : 1269 - 300;
                 PropertyChanges { target: appWindow; height: maxWindowHeight; }
@@ -1296,7 +1296,7 @@ ApplicationWindow {
                 PropertyChanges { target: titleBar; visible: true }
 //                PropertyChanges { target: titleBar; y: 0 }
                 PropertyChanges { target: titleBar; title: qsTr("Arqma") + translationManager.emptyString }
-                PropertyChanges { target: mobileHeader; visible: isMobile ? true : false }
+                PropertyChanges { target: mobileHeader; visible: isMobile ? false : true }
             }
         ]
 

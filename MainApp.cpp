@@ -1,4 +1,3 @@
-// Copyright (c) 2018, The ArQmA Project
 #include "MainApp.h"
 #include <QCloseEvent>
 

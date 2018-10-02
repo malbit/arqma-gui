@@ -18,15 +18,15 @@ Rectangle {
         id: logo
         visible: appWindow.width > 460 * scaleRatio
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -5
+        anchors.verticalCenterOffset: 0
         anchors.left: parent.left
         anchors.leftMargin: 50 * scaleRatio
-        source: "../images/arqmaLogo2.png"
+        source: "../images/arqmaLogo.png"
     }
 
     Image {
         id: icon
-        visible: !logo.visible
+        visible: logo.visible
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 40 * scaleRatio
