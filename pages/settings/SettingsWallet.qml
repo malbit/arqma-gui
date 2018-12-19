@@ -71,6 +71,8 @@ Rectangle {
 
                 Text {
                     Layout.fillWidth: true
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
                     Layout.preferredHeight: 20 * scaleRatio
                     Layout.topMargin: 8 * scaleRatio
                     color: "white"
@@ -119,7 +121,8 @@ Rectangle {
 
                     Text {
                         id: closeWalletText
-                        Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
                         color: ArqmaComponents.Style.defaultFontColor
                         font.family: ArqmaComponents.Style.fontRegular.name
                         font.pixelSize: 14 * scaleRatio
@@ -298,7 +301,8 @@ Rectangle {
 
                     Text {
                         id: showSeedText
-                        Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
                         color: ArqmaComponents.Style.defaultFontColor
                         font.family: ArqmaComponents.Style.fontRegular.name
                         font.pixelSize: 14 * scaleRatio
@@ -386,7 +390,8 @@ Rectangle {
 
                     Text {
                         id: rescanButtonText
-                        Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
                         color: ArqmaComponents.Style.defaultFontColor
                         font.family: ArqmaComponents.Style.fontRegular.name
                         font.pixelSize: 14 * scaleRatio
