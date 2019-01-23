@@ -86,6 +86,10 @@ ApplicationWindow {
     // true if wallet ever synchronized
     property bool walletInitialized : false
 
+    property var current_address
+    property var current_address_label: "Primary"
+    property int current_subaddress_table_index: 0
+
     function altKeyReleased() { ctrlPressed = false; }
 
     function getRemoteNodeList()
@@ -723,7 +727,7 @@ ApplicationWindow {
     FileDialog {
         id: saveTxDialog
         title: "Please choose a location"
-        folder: "file://" +ArqmaAccountsDir
+        folder: "file://" + ArqmaAccountsDir
         selectExisting: false;
 
         onAccepted: {
@@ -939,6 +943,7 @@ ApplicationWindow {
 
     // close wallet and show wizard
     function showWizard(){
+        clearArqmaCardLabelText();
         walletInitialized = false;
         closeWallet();
         currentWallet = undefined;
@@ -964,8 +969,8 @@ ApplicationWindow {
 
     objectName: "appWindow"
     visible: true
-    width: screenWidth //rightPanelExpanded ? 1269 : 1269 - 300
-    height: maxWindowHeight;
+//    width: screenWidth //rightPanelExpanded ? 1269 : 1269 - 300
+//    height: maxWindowHeight;
     color: Style.backgroundColor
     flags: persistentSettings.customDecorations ? Windows.flagsCustomDecorations : Windows.flags
     onWidthChanged: x -= 0
@@ -1827,6 +1832,15 @@ ApplicationWindow {
         onTriggered: checkUpdates()
     }
 
+    function titlebarToggleBlue(flag){
+        // toggle titlebar Blue style
+        if(flag !== undefined){
+            titleBar.blue = flag;
+        } else {
+            titleBar.blue = !titleBar.blue;
+        }
+    }
+
     function releaseFocus() {
         // Workaround to release focus from textfield when scrolling (https://bugreports.qt.io/browse/QTBUG-34867)
         if(isAndroid) {
@@ -1834,6 +1848,12 @@ ApplicationWindow {
             middlePanel.focus = true
             middlePanel.focus = false
         }
+    }
+
+    // reset label text. othewise potential privacy leak showing unlock time when switching wallets
+    function clearArqmaCardLabelText(){
+        leftPanel.minutesToUnlockTxt = qsTr("Unlocked balance")
+        leftPanel.balanceLabelText = qsTr("Balance")
     }
 
     function userActivity() {
