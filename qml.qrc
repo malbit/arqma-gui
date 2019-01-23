@@ -215,22 +215,39 @@
         <file>tabs/Twitter.qml</file>
         <file>tabs/tweetSearch.js</file>
 
-        <file>wizard/WizardConfigure.qml</file>
-        <file>wizard/WizardCreateViewOnlyWallet.qml</file>
-        <file>wizard/WizardCreateWallet.qml</file>
-        <file>wizard/WizardCreateWalletFromDevice.qml</file>
+        <file>wizard/WizardAskPassword.qml</file>
+        <file>wizard/WizardController.qml</file>
+        <file>wizard/WizardCreateWallet1.qml</file>
+        <file>wizard/WizardCreateWallet2.qml</file>
+        <file>wizard/WizardCreateWallet3.qml</file>
+        <file>wizard/WizardCreateWallet4.qml</file>
+        <file>wizard/WizardCreateDevice1.qml</file>
         <file>wizard/WizardDaemonSettings.qml</file>
-        <file>wizard/WizardDonation.qml</file>
-        <file>wizard/WizardFinish.qml</file>
-        <file>wizard/WizardMain.qml</file>
-        <file>wizard/WizardManageWalletUI.qml</file>
-        <file>wizard/WizardMemoTextInput.qml</file>
-        <file>wizard/WizardOptions.qml</file>
-        <file>wizard/WizardPassword.qml</file>
-        <file>wizard/WizardPasswordInput.qml</file>
-        <file>wizard/WizardPasswordUI.qml</file>
-        <file>wizard/WizardRecoveryWallet.qml</file>
-        <file>wizard/WizardWelcome.qml</file>
-        <file>wizard/utils.js</file>
+        <file>wizard/WizardFinishedSetup.qml</file>
+        <file>wizard/WizardHeader.qml</file>
+        <file>wizard/WizardHome.qml</file>
+        <file>wizard/WizardLanguage.qml</file>
+        <file>wizard/WizardNav.qml</file>
+        <file>wizard/WizardWalletInput.qml</file>
+        <file>wizard/WizardRestoreWallet1.qml</file>
+        <file>wizard/WizardRestoreWallet2.qml</file>
+        <file>wizard/WizardRestoreWallet3.qml</file>
+        <file>wizard/WizardRestoreWallet4.qml</file>
+        <file>wizard/WizardSummary.qml</file>
+        <file>js/Wizard.js</file>
+        <file>components/LanguageSidebar.qml</file>
+        <file>images/world-flags-globe.png</file>
+        <file>images/langFlagGrey.png</file>
+        <file>images/restore-wallet-from-hardware@2x.png</file>
+        <file>images/restore-wallet-from-hardware.png</file>
+        <file>images/open-wallet-from-file@2x.png</file>
+        <file>images/open-wallet-from-file.png</file>
+        <file>images/restore-wallet@2x.png</file>
+        <file>images/restore-wallet.png</file>
+        <file>images/create-wallet@2x.png</file>
+        <file>images/create-wallet.png</file>
+        <file>wizard/WizardHomeMenuItem.qml</file>
+        <file>wizard/WizardNavProgressDot.qml</file>
+        <file>wizard/WizardOpenWallet1.qml</file>
     </qresource>
 </RCC>

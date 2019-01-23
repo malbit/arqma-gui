@@ -210,7 +210,7 @@ void DaemonManager::printError()
 }
 
 bool DaemonManager::running(NetworkType::Type nettype) const
-{ 
+{
     QString status;
     sendCommand("status", nettype, status);
     qDebug() << status;
@@ -271,9 +271,9 @@ QVariantMap DaemonManager::validateDataDir(const QString &dataDir) const
             valid = false;
         }
 
-        // Make sure there is 20GB storage available
+        // Make sure there is 5GB storage available
         storageAvailable = storage.bytesAvailable()/1000/1000/1000;
-        if (storageAvailable < 20) {
+        if (storageAvailable < 5) {
             valid = false;
         }
     } else {

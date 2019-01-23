@@ -54,8 +54,10 @@ Item {
 
     property bool borderDisabled: false
     property string borderColor: {
-        if(input.activeFocus){
-            return ArqmaComponents.Style.heroBlue;
+        if(error && input.text !== ""){
+            return ArqmaComponents.Style.inputBorderColorInvalid;
+        } else if(input.activeFocus){
+            return ArqmaComponents.Style.inputBorderColorActive;
         } else {
             return ArqmaComponents.Style.inputBorderColorInActive;
         }
@@ -210,8 +212,6 @@ Item {
             visible: item.inlineButtonText ? true : false
             anchors.right: parent.right
             anchors.rightMargin: 8 * scaleRatio
-            anchors.top: parent.top
-            anchors.topMargin: 6 * scaleRatio
         }
     }
 }

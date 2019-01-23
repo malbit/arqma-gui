@@ -55,6 +55,10 @@ Rectangle {
     property bool showCloseButton: true
     property bool showArqmaLogo: false
     property bool small: false
+    property alias titleBarGradientImageOpacity: titleBarGradientImage.opacity
+    property bool blue: false
+    property string buttonHoverColor: "#262626"
+    property string buttonHoverColorBlue: "#0800FF"
 
     signal closeClicked
     signal maximizeClicked
@@ -68,10 +72,19 @@ Rectangle {
         z: parent.z + 1
 
         Image {
-           anchors.fill: parent
-           height: titleBar.height
-           width: titleBar.width
-           source: "../images/titlebarGradient.jpg"
+            id: titleBarGradientImage
+            visible: !titlebar.blue
+            anchors.fill: parent
+            height: titleBar.height
+            width: titleBar.width
+            source: "../images/titlebarGradient.jpg"
+        }
+
+        Rectangle {
+            visible: titleBar.blue
+            width: parent.width
+            height: parent.height
+            color: "#0800FF"
         }
     }
 
@@ -80,17 +93,27 @@ Rectangle {
         width: 125
         height: parent.height
         anchors.centerIn: parent
-        visible: customDecorations && showArqmaLogo
+        visible: customDecorations
         z: parent.z + 1
 
         Image {
-            visible: !isMobile
+            visible: !isMobile && showArqmaLogo && !titleBar.blue
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.topMargin: 11
             width: 125
             height: 28
             source: "../images/titlebarLogo.png"
+        }
+
+        Image {
+            visible: !isMobile && showArqmaLogo && titleBar.blue
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.topMargin: 11
+            width: 132
+            height: 22
+            source: "../images/arqmaLogo_white.png"
         }
     }
 
@@ -103,37 +126,87 @@ Rectangle {
         z: parent.z + 1
     }
 
-    // collapse left panel
-    Rectangle {
-        id: goToBasicVersionButton
-        property bool containsMouse: titleBar.mouseX >= x && titleBar.mouseX <= x + width
-        property bool checked: false
-        anchors.top: parent.top
+    RowLayout {
         anchors.left: parent.left
-        color:  "transparent"
-        height: titleBar.height
-        width: height
-        visible: isMobile
+        anchors.top: parent.top
+        width: 40
+        height: parent.height
+        spacing: 0
         z: parent.z + 2
 
-        Image {
-            width: 14
-            height: 14
-            anchors.centerIn: parent
-            source: "../images/expand.png"
+        Rectangle {
+            Layout.preferredHeight: parent.height
+            Layout.preferredWidth: Layout.preferredHeight
+
+            id: goToBasicVersionButton
+            property bool containsMouse: titleBar.mouseX >= x && titleBar.mouseX <= x + width
+            property bool checked: false
+            color:  "transparent"
+            height: titleBar.height
+            width: height
+            visible: !titleBar.blue && titleBar.basicButtonVisible
+
+            Image {
+                width: 14
+                height: 14
+                anchors.centerIn: parent
+                source: "../images/expand.png"
+            }
+
+            MouseArea {
+                id: basicMouseArea
+                hoverEnabled: true
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onEntered: { goToBasicVersionButton.color = titleBar.blue ? titleBar.buttonHoverColorBlue : titleBar.buttonHoverColor }
+                onExited: goToBasicVersionButton.color = "transparent";
+                onClicked: {
+                    releaseFocus()
+                    parent.checked = !parent.checked
+                    titleBar.goToBasicVersion(leftPanel.visible)
+                }
+            }
         }
 
-        MouseArea {
-            id: basicMouseArea
-            hoverEnabled: true
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onEntered: goToBasicVersionButton.color = "#262626";
-            onExited: goToBasicVersionButton.color = "transparent";
-            onClicked: {
-                releaseFocus()
-                parent.checked = !parent.checked
-                titleBar.goToBasicVersion(leftPanel.visible)
+        // language selection
+        Rectangle {
+            Layout.preferredHeight: parent.height
+            Layout.preferredWidth: Layout.preferredHeight
+            visible: !titleBar.blue
+
+            id: languageSelection
+            property bool containsMouse: titleBar.mouseX >= x && titleBar.mouseX <= x + width
+            property bool checked: false
+            color:  "transparent"
+            height: titleBar.height
+            width: height
+            z: parent.z + 2
+
+            Image {
+                width: 14
+                height: 14
+                anchors.centerIn: parent
+                source: "../images/langFlagGrey.png"
+            }
+
+            MouseArea {
+                hoverEnabled: true
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onEntered: parent.color = "#262626";
+                onExited: parent.color = "transparent";
+                onClicked: {
+                    releaseFocus();
+
+                    // Show welcome screen if on home
+                    if(wizard.wizardState === "wizardHome"){
+                        wizard.wizardState = 'wizardLanguage';
+                        return;
+                    }
+
+                    languageSidebar.isOpened ? languageSidebar.close() : languageSidebar.open();
+                    console.log('change language');
+                }
             }
         }
     }

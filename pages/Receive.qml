@@ -735,6 +735,9 @@ Rectangle {
         trackingEnabled.checked = false
     }
 
+    function clearFields() {
+    }
+
     function onPageClosed() {
         timer.running = false
         trackingEnabled.checked = false

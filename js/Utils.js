@@ -54,3 +54,8 @@ function showSeedPage() {
     if(isMobile) hideMenu();
     updateBalance();
 }
+
+function netTypeToString(){
+    var nettype = appWindow.persistentSettings.nettype;
+    return nettype == NetworkType.TESTNET ? qsTr("Testnet") : nettype == NetworkType.STAGENET ? qsTr("Stagenet") : qsTr("Mainnet");
+}

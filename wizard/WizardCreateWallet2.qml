@@ -1,5 +1,4 @@
-// Copyright (c) 2018, The Arqma Network
-// Copyright (c) 2014-2015, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 //
 // All rights reserved.
 //
@@ -27,42 +26,44 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import QtQuick.Controls 2.0
 import QtQuick 2.7
+import QtQuick.Layouts 1.2
+import QtQuick.Controls 2.0
 
-import "../js/TxUtils.js" as TxUtils
+import "../components"
 import "../components" as ArqmaComponents
 
-TextArea {
-    property int fontSize: 18 * scaleRatio
-    property bool fontBold: false
-    property string fontColor: ArqmaComponents.Style.defaultFontColor
+Rectangle {
+    id: wizardCreateWallet2
 
-    property bool mouseSelection: true
-    property bool error: false
-    property bool addressValidation: false
+    color: "transparent"
+    property string viewName: "wizardCreateWallet2"
 
-    id: textArea
-    font.family: ArqmaComponents.Style.fontRegular.name
-    color: fontColor
-    font.pixelSize: fontSize
-    font.bold: fontBold
-    horizontalAlignment: TextInput.AlignLeft
-    selectByMouse: mouseSelection
-    selectionColor: ArqmaComponents.Style.dimmedFontColor
-    selectedTextColor: ArqmaComponents.Style.defaultFontColor
+    ColumnLayout {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.topMargin: 100 * scaleRatio
+        anchors.leftMargin: 80 * scaleRatio
+        anchors.rightMargin: 80 * scaleRatio
 
-    property int minimumHeight: 100 * scaleRatio
-    height: contentHeight > minimumHeight ? contentHeight : minimumHeight
+        spacing: 30 * scaleRatio
 
-    onTextChanged: {
-        if(addressValidation){
-            // js replacement for `RegExpValidator { regExp: /[0-9A-Fa-f]{97}/g }`
-            textArea.text = textArea.text.replace(/[^a-z0-9._@\-]/gi,'');
-            var address_ok = TxUtils.checkAddress(textArea.text, appWindow.persistentSettings.nettype) || TxUtils.isValidOpenAliasAddress(textArea.text);
-            if(!address_ok) error = true;
-            else error = false;
-            TextArea.cursorPosition = textArea.text.length;
+        WizardAskPassword {
+            id: passwordFields
+        }
+
+        WizardNav {
+            progressSteps: 4
+            progress: 2
+            btnNext.enabled: passwordFields.calcStrengthAndVerify();
+            onPrevClicked: {
+                wizardStateView.state = "wizardCreateWallet1";
+            }
+            onNextClicked: {
+                wizardController.walletOptionsPassword = passwordFields.password;
+                wizardStateView.state = "wizardCreateWallet3";
+            }
         }
     }
 }

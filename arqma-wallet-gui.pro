@@ -458,9 +458,7 @@ OTHER_FILES += \
 
 DISTFILES += \
     notes.txt \
-    arqma/src/wallet/CMakeLists.txt \
-    components/MobileHeader.qml
-
+    arqma/src/wallet/CMakeLists.txt
 
 # windows application icon
 RC_ICONS = images/appicon.ico

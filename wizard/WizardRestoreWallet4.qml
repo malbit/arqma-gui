@@ -1,5 +1,4 @@
-// Copyright (c) 2018, The Arqma Network
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 //
 // All rights reserved.
 //
@@ -27,54 +26,51 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import ArqmaComponents.WalletManager 1.0
-import QtQuick 2.2
-import QtQuick.Layouts 1.1
 import "../components"
-import "utils.js" as Utils
+import "../components" as ArqmaComponents
 
-ColumnLayout {
-
-    id: passwordPage
-    opacity: 0
-    visible: false
-
-    Behavior on opacity {
-        NumberAnimation { duration: 100; easing.type: Easing.InQuad }
-    }
-
-    onOpacityChanged: visible = opacity !== 0
+import QtQuick 2.7
+import QtQuick.Layouts 1.2
+import QtQuick.Controls 2.0
 
 
-    function onPageOpened(settingsObject) {
-        wizard.nextButton.enabled = true
-        wizard.nextButton.visible = true
-    }
+Rectangle {
+    id: wizardRestoreWallet4
 
-    function onPageClosed(settingsObject) {
-        var walletFullPath = wizard.createWalletPath(uiItem.walletPath,uiItem.accountNameText);
-        settingsObject['view_only_wallet_path'] = walletFullPath
-        console.log("wallet path", walletFullPath)
-        return wizard.walletPathValid(walletFullPath);
-    }
+    color: "transparent"
+    property string viewName: "wizardRestoreWallet4"
 
-    ListModel {
-        id: dotsModel
-        ListElement { dotColor: "#36B05B" }
-        ListElement { dotColor: "#DBDBDB" }
-    }
+    ColumnLayout {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.topMargin: 100 * scaleRatio
+        anchors.leftMargin: 80 * scaleRatio
+        anchors.rightMargin: 80 * scaleRatio
 
-    WizardManageWalletUI {
-        id: uiItem
-        titleText: qsTr("Create view only wallet") + translationManager.emptyString
-        wordsTextItem.visible: false
-        restoreHeightVisible:false
-        walletName: appWindow.walletName + "-viewonly"
-        progressDotsModel: dotsModel
-        recoverMode: false
-    }
+        spacing: 10 * scaleRatio
 
-    Component.onCompleted: {
-        //parent.wizardRestarted.connect(onWizardRestarted)
+        WizardHeader {
+            title: qsTr("You're all set up!") + translationManager.emptyString
+            subtitle: qsTr("New wallet details:") + translationManager.emptyString
+        }
+
+        WizardSummary {}
+
+        WizardNav {
+            Layout.topMargin: 24 * scaleRatio
+            btnNextText: "Open wallet"
+            progressSteps: 4
+            progress: 4
+
+
+            onPrevClicked: {
+                wizardStateView.state = "wizardRestoreWallet3";
+            }
+            onNextClicked: {
+                wizardController.writeWallet();
+                wizardController.useArqmaClicked();
+            }
+        }
     }
 }

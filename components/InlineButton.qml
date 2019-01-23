@@ -34,14 +34,20 @@ import "../components" as ArqmaComponents
 
 Item {
     id: inlineButton
-    height: rect.height * scaleRatio
+    height: parent.height
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+
+    property bool small: false
     property string shadowPressedColor: "#1216FF"
     property string shadowReleasedColor: "#504C4B"
     property string pressedColor: "#504C4B"
     property string releasedColor: "#1216FF"
     property string icon: ""
     property string textColor: "#FFFFFF"
-    property int fontSize: 12 * scaleRatio
+    property int fontSize: small ? 14 * scaleRatio : 16 * scaleRatio
+    property int rectHeight: small ? 24 * scaleRatio : 28 * scaleRatio
+    property int rectHMargin: small ? 16 * scaleRatio : 22 * scaleRatio
     property alias text: inlineText.text
     signal clicked()
 
@@ -54,17 +60,17 @@ Item {
     Rectangle {
         id: rect
         color: ArqmaComponents.Style.buttonBackgroundColor
-        height: 28 * scaleRatio
-        width: inlineText.width + 22 * scaleRatio
+        height: parent.rectHeight
+        width: inlineText.width + parent.rectHMargin
 
-        anchors.top: parent.top
+        anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
 
         Text {
             id: inlineText
             font.family: ArqmaComponents.Style.fontBold.name
             font.bold: true
-            font.pixelSize: 16 * scaleRatio
+            font.pixelSize: inlineButton.fontSize
             color: "white"
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter

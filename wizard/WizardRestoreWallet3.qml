@@ -1,5 +1,4 @@
-// Copyright (c) 2018, The Arqma Network
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 //
 // All rights reserved.
 //
@@ -27,26 +26,56 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import "../js/Wizard.js" as Wizard
+import "../components" as ArqmaComponents
+
 import QtQuick 2.7
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.0
 
-import "../components" as ArqmaComponents
 
 Rectangle {
-    property bool active: false
-    Layout.preferredWidth: 30 * scaleRatio
-    Layout.fillHeight: true
-    property string activeColor: ArqmaComponents.Style.defaultFontColor
-    property string inactiveColor: "#333333"
-    color: "transparent"
+    id: wizardRestoreWallet3
 
-    Rectangle {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        width: 10 * scaleRatio
-        height: 10 * scaleRatio
-        radius: 10 * scaleRatio
-        color: parent.active ? parent.activeColor : parent.inactiveColor
+    color: "transparent"
+    property string viewName: "wizardRestoreWallet3"
+    property int recoveryMode: 1
+
+    function verify() {
+        // @TODO: check if walletName already exists in walletLocation
+        return walletName.text !== '';
+    }
+
+    ColumnLayout {
+        // anchors.verticalCenter: parent.verticalCenter
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.topMargin: 100 * scaleRatio
+        anchors.leftMargin: 80 * scaleRatio
+        anchors.rightMargin: 80 * scaleRatio
+
+        spacing: 30 * scaleRatio
+
+        WizardHeader {
+            title: qsTr("Daemon settings") + translationManager.emptyString
+            subtitle: qsTr("To be able to communicate with the Arqma network your wallet needs to be connected to a Arqma node. For best privacy it's recommended to run your own node.\n\nIf you don't have the option to run your own node, there's an option to connect to a remote node.") + translationManager.emptyString
+        }
+
+        WizardDaemonSettings {
+            id: daemonSettings
+        }
+
+        WizardNav {
+            progressSteps: 4
+            progress: 3
+            onPrevClicked: {
+                wizardStateView.state = "wizardRestoreWallet2";
+            }
+            onNextClicked: {
+                daemonSettings.save();
+                wizardStateView.state = "wizardRestoreWallet4";
+            }
+        }
     }
 }

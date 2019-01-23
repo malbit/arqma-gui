@@ -38,8 +38,8 @@ import ArqmaComponents.Wallet 1.0
 import ArqmaComponents.PendingTransaction 1.0
 import ArqmaComponents.NetworkType 1.0
 
-
 import "components"
+import "components" as ArqmaComponents
 import "wizard"
 import "js/Utils.js" as Utils
 import "js/Windows.js" as Windows
@@ -80,7 +80,8 @@ ApplicationWindow {
     readonly property string localDaemonAddress : persistentSettings.nettype == NetworkType.MAINNET ? "localhost:19994" : persistentSettings.nettype == NetworkType.TESTNET ? "localhost:29994" : "localhost:39994"
     property string currentDaemonAddress;
     property bool startLocalNodeCancelled: false
-    property int estimatedBlockchainSize: 50 // GB
+    property int estimatedBlockchainSize: 2 // GB
+    property alias viewState: rootItem.state
 
     // true if wallet ever synchronized
     property bool walletInitialized : false
@@ -185,6 +186,7 @@ ApplicationWindow {
         restoreHeight = 0;
         persistentSettings.is_recovering = false
         walletPassword = ""
+        fileDialog.folder = "file://" + ArqmaAccountsDir
         fileDialog.open();
     }
 
@@ -407,6 +409,7 @@ ApplicationWindow {
             passwordDialog.onRejectedCallback = function() {
                 walletPassword = "";
                 //appWindow.enableUI(false)
+                wizard.wizardState = "wizardHome";
                 rootItem.state = "wizard";
             }
             // opening with password but password doesn't match
@@ -425,6 +428,9 @@ ApplicationWindow {
 
         // wallet opened successfully, subscribing for wallet updates
         connectWallet(wallet)
+
+        // force switch normal view
+        rootItem.state = "normal";
     }
 
 
@@ -937,6 +943,7 @@ ApplicationWindow {
         closeWallet();
         currentWallet = undefined;
         wizard.restart();
+        wizard.wizardState = "wizardHome";
         rootItem.state = "wizard"
         // reset balance
         leftPanel.balanceText = leftPanel.unlockedBalanceText = walletManager.displayAmount(0);
@@ -1003,6 +1010,7 @@ ApplicationWindow {
                 initialize(persistentSettings);
             }
             passwordDialog.onRejectedCallback = function() {
+                wizard.wizardState = "wizardHome";
                 rootItem.state = "wizard"
             }
             passwordDialog.open(usefulName(walletPath()))
@@ -1113,15 +1121,14 @@ ApplicationWindow {
         }
     }
 
-
     //Open Wallet from file
     FileDialog {
         id: fileDialog
-        title: "Please choose a file"
-        folder: "file://" +ArqmaAccountsDir
+        title: qsTr("Please choose a file")
+        folder: "file://" + ArqmaAccountsDir
         nameFilters: [ "Wallet files (*.keys)"]
         sidebarVisible: false
-
+        visible: false
 
         onAccepted: {
             persistentSettings.wallet_path = walletManager.urlToLocalPath(fileDialog.fileUrl)
@@ -1136,7 +1143,8 @@ ApplicationWindow {
                 initialize();
             }
             passwordDialog.onRejectedCallback = function() {
-                console.log("Canceled")
+                console.log("Canceled");
+                wizard.wizardState = "wizardHome";
                 rootItem.state = "wizard";
             }
             passwordDialog.open(usefulName(walletPath()));
@@ -1151,15 +1159,20 @@ ApplicationWindow {
     // Choose blockchain folder
     FileDialog {
         id: blockchainFileDialog
+        property string directory: ""
+        signal changed();
+
         title: "Please choose a folder"
         selectFolder: true
         folder: "file://" + persistentSettings.blockchainDataDir
 
+        onRejected: console.log("data dir selection canceled")
         onAccepted: {
             var dataDir = walletManager.urlToLocalPath(blockchainFileDialog.fileUrl)
             var validator = daemonManager.validateDataDir(dataDir);
-            if(!validator.valid) {
-
+            if(validator.valid) {
+                persistentSettings.blockchainDataDir = dataDir;
+            } else {
                 confirmationDialog.title = qsTr("Warning") + translationManager.emptyString;
                 confirmationDialog.text = "";
                 if(validator.readOnly)
@@ -1171,7 +1184,6 @@ ApplicationWindow {
                 if(!validator.lmdbExists)
                     confirmationDialog.text  += qsTr("Note: lmdb folder not found. A new folder will be created.") + "\n\n"
 
-
                 confirmationDialog.icon = StandardIcon.Question
                 confirmationDialog.cancelText = qsTr("Cancel")
 
@@ -1181,22 +1193,14 @@ ApplicationWindow {
                 }
 
                 // Cancel
-                confirmationDialog.onRejectedCallback = function() {
-                };
+                confirmationDialog.onRejectedCallback = function() { };
 
                 confirmationDialog.open()
-            } else {
-                persistentSettings.blockchainDataDir = dataDir
             }
 
+            blockchainFileDialog.directory = blockchainFileDialog.fileUrl;
             delete validator;
-
-
         }
-        onRejected: {
-            console.log("data dir selection canceled")
-        }
-
     }
 
 
@@ -1293,16 +1297,16 @@ ApplicationWindow {
                 PropertyChanges { target: leftPanel; visible: false }
                 PropertyChanges { target: rightPanel; visible: false }
                 PropertyChanges { target: middlePanel; visible: false }
-                PropertyChanges { target: titleBar; basicButtonVisible: false }
                 PropertyChanges { target: wizard; visible: true }
                 PropertyChanges { target: appWindow; width: (screenWidth < 930 || isAndroid || isIOS)? screenWidth : 930; }
                 PropertyChanges { target: appWindow; height: maxWindowHeight; }
                 PropertyChanges { target: resizeArea; visible: true }
-                PropertyChanges { target: titleBar; showMaximizeButton: false }
 //                PropertyChanges { target: frameArea; blocked: true }
-                PropertyChanges { target: titleBar; visible: persistentSettings.customDecorations }
-                PropertyChanges { target: titleBar; title: qsTr("Program setup wizard") + translationManager.emptyString }
                 PropertyChanges { target: mobileHeader; visible: false }
+                PropertyChanges { target: titleBar; basicButtonVisible: false }
+                PropertyChanges { target: titleBar; showMaximizeButton: true }
+                PropertyChanges { target: titleBar; visible: true }
+                PropertyChanges { target: titleBar; title: qsTr("Arqma") + translationManager.emptyString }
             }, State {
                 name: "normal"
                 PropertyChanges { target: leftPanel; visible: isMobile ? false : true }
@@ -1354,7 +1358,7 @@ ApplicationWindow {
             anchors.top: mobileHeader.bottom
             anchors.left: parent.left
             anchors.bottom: parent.bottom
-            
+
             onTransferClicked: {
                 middlePanel.state = "Transfer";
                 middlePanel.flickable.contentY = 0;
@@ -1558,16 +1562,12 @@ ApplicationWindow {
 //            }
         }
 
-        WizardMain {
+        WizardController {
             id: wizard
             anchors.fill: parent
             onUseArqmaClicked: {
-                rootItem.state = "normal" // TODO: listen for this state change in appWindow;
+                rootItem.state = "normal";
                 appWindow.initialize();
-            }
-            onOpenWalletFromFileClicked: {
-                rootItem.state = "normal" // TODO: listen for this state change in appWindow;
-                appWindow.openWalletFromFile();
             }
         }
 
@@ -1843,6 +1843,7 @@ ApplicationWindow {
     }
 
     function checkInUserActivity() {
+        if(rootItem.state !== "normal") return;
         if(!persistentSettings.lockOnUserInActivity) return;
 
         // prompt password after X seconds of inactivity
@@ -1880,5 +1881,9 @@ ApplicationWindow {
         anchors.fill: parent
         color: "black"
         opacity: 0.8
+    }
+
+    ArqmaComponents.LanguageSidebar {
+        id: languageSidebar
     }
 }
