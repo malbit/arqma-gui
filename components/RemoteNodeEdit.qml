@@ -52,6 +52,7 @@ GridLayout {
     property string placeholderColor: ArqmaComponents.Style.defaultFontColor
     property real placeholderOpacity: 0.25
 
+    property string lineEditBorderColor: Qt.rgba(0, 0, 0, 0.15)
     property string lineEditBackgroundColor: "white"
     property string lineEditFontColor: "black"
     property int lineEditFontSize: 18 * scaleRatio
@@ -59,6 +60,7 @@ GridLayout {
     property bool lineEditFontBold: true
 
     signal editingFinished()
+    signal textChanged()
 
     function getAddress() {
         var addr = daemonAddr.text.trim();
@@ -104,5 +106,6 @@ GridLayout {
         fontSize: lineEditFontSize
 
         onEditingFinished: root.editingFinished()
+        onTextChanged: root.textChanged()
     }
 }
