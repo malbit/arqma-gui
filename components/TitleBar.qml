@@ -330,7 +330,6 @@ Rectangle {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left
-        visible: titleBar.small
         height: 1
         color: "#2F2F2F"
         z: parent.z + 1
