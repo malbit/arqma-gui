@@ -47,7 +47,7 @@ Rectangle {
     property string title
     property int mouseX: 0
     property bool containsMouse: false
-    property alias basicButtonVisible: goToBasicVersionButton.visible
+    property bool basicButtonVisible: false
     property bool customDecorations: persistentSettings.customDecorations
     property bool showWhatIsButton: true
     property bool showMinimizeButton: false
@@ -237,7 +237,13 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onEntered: minimizeButton.color = "#262626";
+                onEntered: {
+                    if(titleBar.blue){
+                        minimizeButton.color = titleBar.buttonHoverColorBlue;
+                    } else {
+                        minimizeButton.color = titleBar.buttonHoverColor;
+                    }
+                }
                 onExited: minimizeButton.color = "transparent";
                 onClicked: minimizeClicked();
             }
@@ -264,7 +270,13 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onEntered: maximizeButton.color = "#262626";
+                onEntered: {
+                    if(titleBar.blue){
+                        minimizeButton.color = titleBar.buttonHoverColorBlue;
+                    } else {
+                        minimizeButton.color = titleBar.buttonHoverColor;
+                    }
+                }
                 onExited: maximizeButton.color = "transparent";
                 onClicked: maximizeClicked();
             }
@@ -290,7 +302,13 @@ Rectangle {
                 onClicked: closeClicked();
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onEntered: closeButton.color = "#262626";
+                onEntered: {
+                    if(titleBar.blue){
+                        minimizeButton.color = titleBar.buttonHoverColorBlue;
+                    } else {
+                        minimizeButton.color = titleBar.buttonHoverColor;
+                    }
+                }
                 onExited: closeButton.color = "transparent";
             }
         }
@@ -298,6 +316,7 @@ Rectangle {
 
     // window borders
     Rectangle {
+        visible: !titleBar.blue
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.left: parent.left
@@ -307,6 +326,7 @@ Rectangle {
     }
 
     Rectangle {
+        visible: titleBar.small && !titleBar.blue
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left

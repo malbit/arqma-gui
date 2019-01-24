@@ -201,7 +201,7 @@ Rectangle {
                 Layout.preferredHeight: parent.height
                 color: "transparent"
 
-                Rectangle{
+                Rectangle {
                     width: parent.width
                     height: 24 * scaleRatio
                     radius: 2 * scaleRatio
@@ -292,7 +292,7 @@ Rectangle {
                 Layout.preferredHeight: parent.height
                 color: "transparent"
 
-                Rectangle{
+                Rectangle {
                     width: parent.width
                     height: 24 * scaleRatio
                     radius: 2 * scaleRatio
@@ -381,9 +381,8 @@ Rectangle {
                 Layout.preferredHeight: parent.height
                 color: "transparent"
 
-                Rectangle{
+                Rectangle {
                     width: parent.width
-
                     height: 24 * scaleRatio
                     radius: 2 * scaleRatio
                     anchors.verticalCenter: parent.verticalCenter
@@ -419,6 +418,102 @@ Rectangle {
                                 informationPopup.onCloseCallback = null
                                 informationPopup.open();
                             }
+                        }
+                    }
+                }
+
+                Rectangle {
+                    // divider
+                    Layout.preferredHeight: 1 * scaleRatio
+                    Layout.fillWidth: true
+                    Layout.topMargin: 8 * scaleRatio
+                    Layout.bottomMargin: 8 * scaleRatio
+                    color: ArqmaComponents.Style.dividerColor
+                    opacity: ArqmaComponents.Style.dividerOpacity
+                }
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: settingsWallet.itemHeight
+                    columnSpacing: 0
+
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 20 * scaleRatio
+                        Layout.topMargin: 8 * scaleRatio
+                        color: "white"
+                        font.bold: true
+                        font.family: ArqmaComponents.Style.fontRegular.name
+                        font.pixelSize: 16 * scaleRatio
+                        text: qsTr("Change Arqma Wallet Password") + translationManger.emptyString
+                    }
+
+                    TextArea {
+                        Layout.fillWidth: true
+                        color: ArqmaComponents.Style.dimmedFontColor
+                        font.family: ArqmaComponents.Style.fontRegular.name
+                        font.pixelSize: 14 * scaleRatio
+                        horizontalAlignment: TextInput.AlignLeft
+                        selectByMouse: false
+                        wrapMode: Text.WordWrap;
+                        textMargin: 0
+                        leftPadding: 0
+                        topPadding: 0
+                        text: qsTr("Change the password of your Arqma Wallet") + translationManger.emptyString
+                        width: parent.width
+                        readOnly: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            enabled: false
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                Layout.minimumWidth: 120 * scaleRatio
+                Layout.preferredWidth: rescanButtonText.width + (20 * scaleRatio)
+                Layout.preferredHeight: parent.height
+                color: "transparent"
+
+                Rectangle {
+                    width: parent.width
+                    height: 24 * scaleRatio
+                    radius: 2 * scaleRatio
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: ArqmaComponents.Style.heroBlue
+
+                    Text {
+                        id: passwordButtonText
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: ArqmaComponents.Style.defaultFontColor
+                        font.family: ArqmaComponents.Style.fontRegular.name
+                        font.pixelSize: 14 * scaleRatio
+                        font.bold: true
+                        text: qsTr("Change Password") + translationManager.emptyString
+                    }
+
+                    MouseArea {
+                        cursorShape: Qt.PointingHandCursor
+                        anchors.fill: parent
+                        onClicked: {
+                            passwordDialog.onAcceptedCallback = function() {
+                                if(appWindow.walletPassword === passwordDialog.password){
+                                    newPasswordDialog.open()
+                                } else {
+                                    informationPopup.title  = qsTr("Error") + translationManager.emptyString;
+                                    informationPopup.text = qsTr("Wrong password");
+                                    informationPopup.open()
+                                    informationPopup.onCloseCallback = function() {
+                                        passwordDialog.open()
+                                    }
+                                }
+                            }
+                            passwordDialog.onRejectedCallback = null;
+                            passwordDialog.open()
                         }
                     }
                 }

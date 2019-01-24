@@ -131,7 +131,7 @@ function walletPathExists(directory, filename, isIOS, walletManager) {
         directory += "/"
 
     if(isIOS)
-        var path = moneroAccountsDir + filename;
+        var path = ArqmaAccountsDir + filename;
     else
         var path = directory + filename + "/" + filename;
 

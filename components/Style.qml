@@ -43,5 +43,5 @@ QtObject {
     property string buttonTextColor: "white"
     property string buttonTextColorDisabled: "white"
     property string dividerColor: heroBlue
-    property real dividerOpacity: 1.00
+    property real dividerOpacity: 0.20
 }

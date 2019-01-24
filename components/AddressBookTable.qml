@@ -35,6 +35,7 @@ ListView {
     id: listView
     clip: true
     boundsBehavior: ListView.StopAtBounds
+    property bool selectAndSend: false
 
     footer: Rectangle {
         height: 127
@@ -58,6 +59,11 @@ ListView {
         color: "transparent"
         z: listView.count - index
         function collapseDropdown() { dropdown.expanded = false }
+        function doSend() {
+            console.log("Sending to: ", address +" "+ paymentId);
+            middlePanel.sendTo(address, paymentId, description);
+            leftPanel.selectItem(middlePanel.state)
+        }
 
         Text {
             id: descriptionText
@@ -150,6 +156,7 @@ ListView {
             anchors.verticalCenter: parent.verticalCenter
             anchors.rightMargin: 5
             dataModel: dropModel
+            visible: !listView.selectAndSend
             z: 1
             onExpandedChanged: {
                 if(expanded) {
@@ -165,9 +172,7 @@ ListView {
                     appWindow.showStatusMessage(qsTr("Address copied to clipboard"),3)
                 }
                 else if(option === 1){
-                   console.log("Sending to: ", address +" "+ paymentId);
-                   middlePanel.sendTo(address, paymentId, description);
-                   leftPanel.selectItem(middlePanel.state)
+                   doSend()
                 } else if(option === 2){
                     console.log("Delete: ", rowId);
                     currentWallet.addressBookModel.deleteRow(rowId);
@@ -181,6 +186,15 @@ ListView {
             anchors.bottom: parent.bottom
             height: 1
             color: "#404040"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            visible: listView.selectAndSend
+            onClicked: {
+                doSend();
+            }
         }
     }
 }

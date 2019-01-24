@@ -135,7 +135,7 @@ Drawer {
     // Flags model
     XmlListModel {
         id: langModel
-        source: "/lang/languages.xml"
+        source: "../lang/languages.xml"
         query: "/languages/language"
 
         XmlRole { name: "display_name"; query: "@display_name/string()" }

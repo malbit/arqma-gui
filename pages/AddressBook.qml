@@ -35,20 +35,18 @@ import ArqmaComponents.AddressBookModel 1.0
 import ArqmaComponents.Clipboard 1.0
 import "../js/TxUtils.js" as TxUtils
 
-Rectangle {
+ColumnLayout {
     id: root
-    color: "transparent"
     property var model
+    property bool selectAndSend: false
     Clipboard { id: clipboard }
 
     ColumnLayout {
-        id: columnLayout
-        anchors.margins: isMobile ? 17 : 40
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
+        Layout.margins: (isMobile ? 17 : 20) * scaleRatio
+        Layout.topMargin: 40 * scaleRatio
         Layout.fillWidth: true
         spacing: 26 * scaleRatio
+        visible: !root.selectAndSend
 
         RowLayout {
             id: addressLineRow
@@ -59,7 +57,7 @@ Rectangle {
                 spacing: 0
                 fontBold: true
                 labelText: qsTr("Address") + translationManager.emptyString
-		        labelButtonText: qsTr("Resolve") + translationManager.emptyString
+		            labelButtonText: qsTr("Resolve") + translationManager.emptyString
                 placeholderText: "ar.. / aRi.. / OpenAlias"
                 wrapMode: Text.WrapAnywhere
                 addressValidation: true
@@ -93,7 +91,7 @@ Rectangle {
 
         ArqmaComponents.StandardButton {
             id: resolveButton
-	        anchors.left: parent.left
+	          anchors.left: parent.left
   	        width: 80
             text: qsTr("Resolve") + translationManager.emptyString
             visible: TxUtils.isValidOpenAliasAddress(addressLine.text)
@@ -110,7 +108,7 @@ Rectangle {
                                 descriptionLine.text = descriptionLine.text ? addressLine.text + " " + descriptionLine.text : addressLine.text
                                 addressLine.text = parts[1]
                                 addressLine.cursorPosition = 0
-                            } 
+                            }
                             else
                                 oa_message(qsTr("No valid address found at this OpenAlias address"))
                         }
@@ -187,13 +185,11 @@ Rectangle {
 
     Rectangle {
         id: tableRect
-        anchors.top: columnLayout.bottom
-        anchors.leftMargin: isMobile ? 17 : 40
-        anchors.rightMargin: isMobile ? 17 : 40
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: parent.height - addButton.y - addButton.height - 36 * scaleRatio
+        Layout.leftMargin: (isMobile ? 17 : 40) * scaleRatio
+        Layout.rightMargin: (isMobile ? 17 : 40) * scaleRatio
+        Layout.topMargin: (root.selectAndSend ? 40 : 0) * scaleRatio
+        Layout.fillHeight: true
+        Layout.fillWidth: true
         color: "transparent"
 
         Behavior on height {
@@ -217,6 +213,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             onContentYChanged: flickableScroll.flickableContentYChanged()
             model: root.model
+            selectAndSend: root.selectAndSend
         }
     }
 
@@ -234,6 +231,10 @@ Rectangle {
       paymentIdLine.error = !payment_id_ok
 
       return address_ok && payment_id_ok
+    }
+
+    function onPageClosed() {
+        root.selectAndSend = false;
     }
 
     function onPageCompleted() {
@@ -283,4 +284,3 @@ Rectangle {
         }
     }
 }
-

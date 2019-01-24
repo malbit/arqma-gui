@@ -54,11 +54,11 @@ Rectangle {
     Clipboard { id: clipboard }
 
     function oa_message(text) {
-      oaPopup.title = qsTr("OpenAlias error") + translationManager.emptyString
-      oaPopup.text = text
-      oaPopup.icon = StandardIcon.Information
-      oaPopup.onCloseCallback = null
-      oaPopup.open()
+        oaPopup.title = qsTr("OpenAlias error") + translationManager.emptyString
+        oaPopup.text = text
+        oaPopup.icon = StandardIcon.Information
+        oaPopup.onCloseCallback = null
+        oaPopup.open()
     }
 
     function updateFromQrCode(address, payment_id, amount, tx_description, recipient_name) {
@@ -214,7 +214,10 @@ Rectangle {
               placeholderText: "ar.. / aRi.. / OpenAlias"
               wrapMode: Text.WrapAnywhere
               addressValidation: true
-              onInputLabelLinkActivated: { appWindow.showPageRequest("AddressBook") }
+              onInputLabelLinkActivated: {
+                  middlePanel.addressBookView.selectAndSend = true;
+                  appWindow.showPageRequest("AddressBook");
+              }
               pasteButton: true
               onPaste: function(clipboardText) {
                   const parsed = walletManager.parse_uri_to_object(clipboardText);
