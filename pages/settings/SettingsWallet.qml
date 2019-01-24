@@ -445,7 +445,7 @@ Rectangle {
                         font.bold: true
                         font.family: ArqmaComponents.Style.fontRegular.name
                         font.pixelSize: 16 * scaleRatio
-                        text: qsTr("Change Arqma Wallet Password") + translationManger.emptyString
+                        text: qsTr("Change Arqma Wallet Password") + translationManager.emptyString
                     }
 
                     TextArea {
@@ -459,7 +459,7 @@ Rectangle {
                         textMargin: 0
                         leftPadding: 0
                         topPadding: 0
-                        text: qsTr("Change the password of your Arqma Wallet") + translationManger.emptyString
+                        text: qsTr("Change the password of your Arqma Wallet") + translationManager.emptyString
                         width: parent.width
                         readOnly: true
 

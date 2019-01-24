@@ -139,7 +139,7 @@ Rectangle {
                   Layout.fillWidth: true
                   Layout.minimumWidth: 200
                   inlineIcon: true
-                  labelText: qsTr("Arqma Amount") + translationManger.emptyString
+                  labelText: qsTr("Arqma Amount") + translationManager.emptyString
                   placeholderText: qsTr("") + translationManager.emptyString
                   width: 100 * scaleRatio
                   fontBold: true

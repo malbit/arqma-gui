@@ -73,7 +73,7 @@ Rectangle {
 
         Image {
             id: titleBarGradientImage
-            visible: !titlebar.blue
+            visible: !titleBar.blue
             anchors.fill: parent
             height: titleBar.height
             width: titleBar.width
@@ -272,9 +272,9 @@ Rectangle {
                 cursorShape: Qt.PointingHandCursor
                 onEntered: {
                     if(titleBar.blue){
-                        minimizeButton.color = titleBar.buttonHoverColorBlue;
+                        maximizeButton.color = titleBar.buttonHoverColorBlue;
                     } else {
-                        minimizeButton.color = titleBar.buttonHoverColor;
+                        maximizeButton.color = titleBar.buttonHoverColor;
                     }
                 }
                 onExited: maximizeButton.color = "transparent";
@@ -304,9 +304,9 @@ Rectangle {
                 cursorShape: Qt.PointingHandCursor
                 onEntered: {
                     if(titleBar.blue){
-                        minimizeButton.color = titleBar.buttonHoverColorBlue;
+                        closeButton.color = titleBar.buttonHoverColorBlue;
                     } else {
-                        minimizeButton.color = titleBar.buttonHoverColor;
+                        closeButton.color = titleBar.buttonHoverColor;
                     }
                 }
                 onExited: closeButton.color = "transparent";

@@ -135,7 +135,7 @@ Rectangle {
                 visible: errorMsg.text !== ""
                 Layout.fillWidth: true
                 font.family: ArqmaComponents.Style.fontRegular.name
-                color: ArqmaComponents.Style.errorColor
+                color: ArqmaComponents.Style.infoRed
                 font.pixelSize: 16 * scaleRatio
 
                 selectionColor: ArqmaComponents.Style.dimmedFontColor
