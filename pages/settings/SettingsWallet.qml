@@ -421,59 +421,64 @@ Rectangle {
                         }
                     }
                 }
+			}
+		}
 
-                Rectangle {
-                    // divider
-                    Layout.preferredHeight: 1 * scaleRatio
+        Rectangle {
+            // divider
+            Layout.preferredHeight: 1 * scaleRatio
+            Layout.fillWidth: true
+            Layout.topMargin: 8 * scaleRatio
+            Layout.bottomMargin: 8 * scaleRatio
+            color: ArqmaComponents.Style.dividerColor
+            opacity: ArqmaComponents.Style.dividerOpacity
+        }
+
+        GridLayout {
+            Layout.fillWidth: true
+            Layout.preferredHeight: settingsWallet.itemHeight
+            columnSpacing: 0
+			
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                spacing: 0			
+
+                Text {
                     Layout.fillWidth: true
+                    Layout.preferredHeight: 20 * scaleRatio
                     Layout.topMargin: 8 * scaleRatio
-                    Layout.bottomMargin: 8 * scaleRatio
-                    color: ArqmaComponents.Style.dividerColor
-                    opacity: ArqmaComponents.Style.dividerOpacity
+                    color: "white"
+                    font.bold: true
+                    font.family: ArqmaComponents.Style.fontRegular.name
+                    font.pixelSize: 16 * scaleRatio
+                    text: qsTr("Change Arqma Wallet Password") + translationManager.emptyString
                 }
 
-                GridLayout {
+                TextArea {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: settingsWallet.itemHeight
-                    columnSpacing: 0
+                    color: ArqmaComponents.Style.dimmedFontColor
+                    font.family: ArqmaComponents.Style.fontRegular.name
+                    font.pixelSize: 14 * scaleRatio
+                    horizontalAlignment: TextInput.AlignLeft
+                    selectByMouse: false
+                    wrapMode: Text.WordWrap;
+                    textMargin: 0
+                    leftPadding: 0
+                    topPadding: 0
+                    text: qsTr("Change the password of your Arqma Wallet") + translationManager.emptyString
+                    readOnly: true
 
-                    Text {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 20 * scaleRatio
-                        Layout.topMargin: 8 * scaleRatio
-                        color: "white"
-                        font.bold: true
-                        font.family: ArqmaComponents.Style.fontRegular.name
-                        font.pixelSize: 16 * scaleRatio
-                        text: qsTr("Change Arqma Wallet Password") + translationManager.emptyString
-                    }
-
-                    TextArea {
-                        Layout.fillWidth: true
-                        color: ArqmaComponents.Style.dimmedFontColor
-                        font.family: ArqmaComponents.Style.fontRegular.name
-                        font.pixelSize: 14 * scaleRatio
-                        horizontalAlignment: TextInput.AlignLeft
-                        selectByMouse: false
-                        wrapMode: Text.WordWrap;
-                        textMargin: 0
-                        leftPadding: 0
-                        topPadding: 0
-                        text: qsTr("Change the password of your Arqma Wallet") + translationManager.emptyString
-                        width: parent.width
-                        readOnly: true
-
-                        MouseArea {
-                            anchors.fill: parent
-                            enabled: false
-                        }
+                    MouseArea {
+                        anchors.fill: parent
+                        enabled: false
                     }
                 }
-            }
+			}
 
             Rectangle {
                 Layout.minimumWidth: 120 * scaleRatio
-                Layout.preferredWidth: rescanButtonText.width + (20 * scaleRatio)
+                Layout.preferredWidth: passwordButtonText.width + (20 * scaleRatio)
                 Layout.preferredHeight: parent.height
                 color: "transparent"
 
