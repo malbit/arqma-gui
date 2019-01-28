@@ -90,10 +90,6 @@ ApplicationWindow {
     property var current_address_label: "Primary"
     property int current_subaddress_table_index: 0
 
-    property var MainnetRemoteNodeList
-    property var TestnetRemoteNodeList
-    property var StagenetRemoteNodeList
-
     function altKeyReleased() { ctrlPressed = false; }
 
     function getRemoteNodeList()
