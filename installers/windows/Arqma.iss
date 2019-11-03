@@ -79,7 +79,6 @@ Source: "arqma-wallet-gui.log"; DestDir: "{app}"; Flags: onlyifdoesntexist; Perm
 
 ; Arqma CLI wallet
 Source: "bin\arqma-wallet-cli.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\arqma-gen-trusted-multisig.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Arqma wallet RPC interface implementation
 Source: "bin\arqma-wallet-rpc.exe"; DestDir: "{app}"; Flags: ignoreversion
